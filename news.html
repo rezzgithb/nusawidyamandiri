@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .news-header {
+            margin-top: 100px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .news-header h1 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .news-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .news-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            animation: slideUp 0.6s ease-in-out;
+            cursor: pointer;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .news-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .news-body {
+            padding: 1.5rem;
+        }
+        
+        .news-date {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .news-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .news-excerpt {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-gray);
+        }
+        
+        .news-author {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .read-more {
+            color: var(--primary-blue);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .read-more:hover {
+            gap: 0.5rem;
+            color: var(--light-blue);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            animation: scaleIn 0.3s ease-in-out;
+        }
+        
+        .modal-close {
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+        }
+        
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+        
+        .modal-header h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .modal-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+        
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                NWM School
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="index.html#about">Tentang</a></li>
+                <li><a href="about.html">Tentang Kami</a></li>
+                <li><a href="news.html">Berita</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Hubungi Kami</a></li>
+            </ul>
+            <div class="navbar-auth">
+                <a href="login.html" class="btn-login">Masuk</a>
+                <a href="signup.html" class="btn-signup">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="news-header">
+        <h1>Berita dan Artikel</h1>
+        <p>Informasi terkini dan artikel menarik dari Sekolah Nusa Widya Mandiri</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <section>
+        <div class="container">
+            <!-- FILTER -->
+            <div class="news-filter">
+                <button class="filter-btn active" onclick="filterNews('semua')">Semua</button>
+                <button class="filter-btn" onclick="filterNews('berita-internal')">Berita Internal</button>
+                <button class="filter-btn" onclick="filterNews('ekstrakurikuler')">Ekstrakurikuler</button>
+                <button class="filter-btn" onclick="filterNews('artikel')">Artikel</button>
+            </div>
+
+            <!-- NEWS GRID -->
+            <div class="news-grid" id="newsGrid">
+                <!-- News cards will be generated by JavaScript -->
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+                <button class="page-btn" id="prevBtn" onclick="previousPage()" disabled>
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <div id="pageNumbers"></div>
+                <button class="page-btn" id="nextBtn" onclick="nextPage()">
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+            </div>
+            <div class="modal-meta">
+                <div class="modal-meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span id="modalDate"></span>
+                </div>
+                <div class="modal-meta-item">
+                    <i class="fas fa-user"></i>
+                    <span id="modalAuthor"></span>
+                </div>
+                <div class="modal-meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span id="modalCategory"></span>
+                </div>
+            </div>
+            <img id="modalImage" src="" alt="" style="width: 100%; border-radius: 10px; margin-bottom: 1rem;">
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><i class="fas fa-graduation-cap"></i> Nusa Widya Mandiri</h3>
+                <p>Sekolah terpercaya dalam membangun generasi penerus bangsa yang cerdas, terampil, dan berakhlak mulia.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Halaman</h3>
+                <a href="index.html">Beranda</a>
+                <a href="about.html">Tentang Kami</a>
+                <a href="news.html">Berita</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Hubungi Kami</a>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak</h3>
+                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@nusawidya.sch.id</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Kota</p>
+            </div>
+            <div class="footer-section">
+                <h3>Ikuti Kami</h3>
+                <div class="social-links">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sekolah Nusa Widya Mandiri. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        const newsData = [
+            {
+                id: 1,
+                title: 'Peluncuran Lab Komputer Terbaru',
+                category: 'berita-internal',
+                date: '2024-01-25',
+                author: 'Admin',
+                excerpt: 'Sekolah kami telah meluncurkan laboratorium komputer terbaru dengan perangkat dan infrastruktur tercanggih...',
+                content: 'Sekolah kami telah meluncurkan laboratorium komputer terbaru dengan perangkat dan infrastruktur tercanggih. Fasilitas ini dilengkapi dengan 40 unit komputer gaming, server performance tinggi, dan koneksi internet fiber optic super cepat. Lab ini dirancang untuk mendukung pembelajaran ilmu komputer, programming, digital design, dan keterampilan teknologi informasi lainnya. Investasi besar ini menunjukkan komitmen kami terhadap pendidikan berkualitas dan persiapan siswa menghadapi era digital.',
+                image: 'news1.jpg'
+            },
+            {
+                id: 2,
+                title: 'Siswa Raih Medali di Olimpiade Sains',
+                category: 'berita-internal',
+                date: '2024-01-20',
+                author: 'Admin',
+                excerpt: 'Prestasi gemilang diraih oleh tim siswa kami dalam kompetisi olimpiade sains tingkat nasional...',
+                content: 'Prestasi gemilang diraih oleh tim siswa kami yang terdiri dari 8 peserta dalam kompetisi olimpiade sains tingkat nasional. Mereka berhasil meraih 2 medali emas dan 1 medali perak, melampaui target yang telah ditetapkan. Kesuksesan ini adalah hasil dari dedikasi siswa, pembimbingan guru, dan dukungan sekolah dalam program pengembangan bakat. Kami bangga dan terus memotivasi siswa untuk berprestasi lebih tinggi lagi.',
+                image: 'news2.jpg'
+            },
+            {
+                id: 3,
+                title: 'Festival Budaya Sekolah 2024',
+                category: 'ekstrakurikuler',
+                date: '2024-01-18',
+                author: 'Panitia',
+                excerpt: 'Acara festival budaya tahunan menampilkan keberagaman budaya dan kreativitas siswa kami...',
+                content: 'Acara festival budaya sekolah tahunan berhasil diselenggarakan dengan meriah dan dihadiri oleh lebih dari 2000 pengunjung. Acara ini menampilkan beragam penampilan seni budaya dari berbagai siswa termasuk tari tradisional, musik modern, dan seni pertunjukan lainnya. Selain itu ada pameran karya seni, kuliner nusantara, dan berbagai booth edukatif. Event ini menjadi ajang apresiasi terhadap keberagaman budaya dan platform bagi siswa untuk menunjukkan talenta mereka.',
+                image: 'news3.jpg'
+            },
+            {
+                id: 4,
+                title: 'Program Magang Industri 2024',
+                category: 'artikel',
+                date: '2024-01-15',
+                author: 'Admin',
+                excerpt: 'Sekolah kami membuka program magang industri bagi siswa kelas XI untuk pengalaman praktis...',
+                content: 'Tahun ini kami membuka program magang industri yang lebih luas dengan kerjasama dengan lebih dari 30 perusahaan terkemuka di berbagai sektor. Program ini memberikan kesempatan kepada siswa kelas XI untuk mendapatkan pengalaman praktis, belajar langsung dari profesional industri, dan membangun jaringan bisnis sejak dini. Peserta akan mendapatkan sertifikat dan rekomendasi dari perusahaan yang dapat membantu dalam mencari pekerjaan di masa depan.',
+                image: 'news4.jpg'
+            },
+            {
+                id: 5,
+                title: 'Turnamen Olahraga Antar Sekolah',
+                category: 'ekstrakurikuler',
+                date: '2024-01-10',
+                author: 'Panitia',
+                excerpt: 'Tim olahraga kami meraih juara umum dalam turnamen basket dan voli antar sekolah...',
+                content: 'Tim olahraga Nusa Widya Mandiri berhasil meraih posisi juara umum dalam turnamen basket dan voli tingkat kota yang diikuti 15 sekolah. Tim basket putra kami menjadi juara 1, sementara tim voli putri meraih juara 2. Pencapaian ini hasil dari latihan rutin, disiplin, dan semangat tinggi dari para atlet. Kami juga terima apresiasi atas sportivitas dan perilaku baik siswa kami selama pertandingan.',
+                image: 'news5.jpg'
+            },
+            {
+                id: 6,
+                title: 'Workshop Pengembangan Diri untuk Guru',
+                category: 'berita-internal',
+                date: '2024-01-05',
+                author: 'Admin',
+                excerpt: 'Sekolah menyelenggarakan workshop pengembangan kompetensi guru bidang teknologi pendidikan...',
+                content: 'Sekolah Nusa Widya Mandiri menyelenggarakan workshop pengembangan kompetensi guru dengan topik "Integrasi Teknologi dalam Pembelajaran Abad 21". Workshop ini dihadiri oleh 60 guru dari sekolah kami dan sekolah mitra, dipandu oleh narasumber ahli dari kampus ternama. Materi mencakup penggunaan learning management system, gamification, dan virtual classroom. Workshop ini merupakan bagian dari komitmen kami meningkatkan kualitas pembelajaran di era digital.',
+                image: 'news6.jpg'
+            }
+        ];
+
+        let currentFilter = 'semua';
+        let currentPage = 1;
+        const itemsPerPage = 6;
+
+        function getFilteredNews() {
+            if (currentFilter === 'semua') {
+                return newsData;
+            }
+            return newsData.filter(news => news.category === currentFilter);
+        }
+
+        function renderNews() {
+            const filteredNews = getFilteredNews();
+            const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const newsToShow = filteredNews.slice(startIndex, endIndex);
+
+            const newsGrid = document.getElementById('newsGrid');
+            newsGrid.innerHTML = '';
+
+            newsToShow.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                card.innerHTML = `
+                    <div class="news-image" onclick="openModal(${news.id})">
+                        <i class="fas fa-newspaper"></i>
+                        <div class="news-category">${getCategoryLabel(news.category)}</div>
+                    </div>
+                    <div class="news-body">
+                        <div class="news-date">
+                            <i class="fas fa-calendar"></i>
+                            ${formatDate(news.date)}
+                        </div>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-excerpt">${news.excerpt}</p>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <i class="fas fa-user"></i> ${news.author}
+                            </span>
+                            <a href="#" class="read-more" onclick="openModal(${news.id}); return false;">
+                                Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                newsGrid.appendChild(card);
+            });
+
+            updatePagination(totalPages);
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'berita-internal': 'Berita Internal',
+                'ekstrakurikuler': 'Ekstrakurikuler',
+                'artikel': 'Artikel'
+            };
+            return labels[category] || 'Berita';
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function filterNews(category) {
+            currentFilter = category;
+            currentPage = 1;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderNews();
+        }
+
+        function updatePagination(totalPages) {
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => goToPage(i);
+                pageNumbers.appendChild(btn);
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderNews();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            const filteredNews = getFilteredNews();
+            const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function openModal(newsId) {
+            const news = newsData.find(n => n.id === newsId);
+            if (news) {
+                document.getElementById('modalTitle').textContent = news.title;
+                document.getElementById('modalDate').textContent = formatDate(news.date);
+                document.getElementById('modalAuthor').textContent = news.author;
+                document.getElementById('modalCategory').textContent = getCategoryLabel(news.category);
+                document.getElementById('modalBody').textContent = news.content;
+                document.getElementById('modalImage').src = news.image;
+                document.getElementById('newsModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('newsModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('newsModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initial render
+        renderNews();
+    </script>
+</body>
+</html>

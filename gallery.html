@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gallery-header {
+            margin-top: 100px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .gallery-header h1 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+            animation: slideUp 0.6s ease-in-out;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 64, 175, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .gallery-icon {
+            font-size: 2rem;
+            color: var(--white);
+        }
+        
+        .gallery-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: var(--white);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-info {
+            transform: translateY(0);
+        }
+        
+        .gallery-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .gallery-date {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2.5rem;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+        }
+        
+        .lightbox-close:hover {
+            transform: scale(1.2);
+        }
+        
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            border-radius: 5px;
+        }
+        
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .lightbox-prev {
+            left: -80px;
+        }
+        
+        .lightbox-next {
+            right: -80px;
+        }
+        
+        .stats-gallery {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .stats-gallery h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-header h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .gallery-item {
+                height: 150px;
+                font-size: 2rem;
+            }
+            
+            .lightbox-prev {
+                left: 10px;
+            }
+            
+            .lightbox-next {
+                right: 10px;
+            }
+            
+            .lightbox-close {
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                NWM School
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="index.html#about">Tentang</a></li>
+                <li><a href="about.html">Tentang Kami</a></li>
+                <li><a href="news.html">Berita</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Hubungi Kami</a></li>
+            </ul>
+            <div class="navbar-auth">
+                <a href="login.html" class="btn-login">Masuk</a>
+                <a href="signup.html" class="btn-signup">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="gallery-header">
+        <h1>Gallery</h1>
+        <p>Koleksi foto kegiatan dan momen berharga di Sekolah Nusa Widya Mandiri</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <section>
+        <div class="container">
+            <!-- STATS -->
+            <div class="stats-gallery">
+                <h3><i class="fas fa-images"></i> Total Foto: <span id="totalPhotos">15</span></h3>
+                <p>Dokumentasi kegiatan sekolah sepanjang tahun ajaran</p>
+            </div>
+
+            <!-- FILTER -->
+            <div class="gallery-filter">
+                <button class="filter-btn active" onclick="filterGallery('semua')">Semua</button>
+                <button class="filter-btn" onclick="filterGallery('kegiatan')">Kegiatan</button>
+                <button class="filter-btn" onclick="filterGallery('olahraga')">Olahraga</button>
+                <button class="filter-btn" onclick="filterGallery('seni')">Seni & Budaya</button>
+                <button class="filter-btn" onclick="filterGallery('akademik')">Akademik</button>
+            </div>
+
+            <!-- GALLERY GRID -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Gallery items will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img id="lightboxImage" src="" alt="" class="lightbox-image">
+            <button class="lightbox-nav lightbox-prev" onclick="previousPhoto()">&#10094;</button>
+            <button class="lightbox-nav lightbox-next" onclick="nextPhoto()">&#10095;</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><i class="fas fa-graduation-cap"></i> Nusa Widya Mandiri</h3>
+                <p>Sekolah terpercaya dalam membangun generasi penerus bangsa yang cerdas, terampil, dan berakhlak mulia.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Halaman</h3>
+                <a href="index.html">Beranda</a>
+                <a href="about.html">Tentang Kami</a>
+                <a href="news.html">Berita</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Hubungi Kami</a>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak</h3>
+                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@nusawidya.sch.id</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Kota</p>
+            </div>
+            <div class="footer-section">
+                <h3>Ikuti Kami</h3>
+                <div class="social-links">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sekolah Nusa Widya Mandiri. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        const galleryData = [
+            { id: 1, title: 'Upacara Bendera', category: 'kegiatan', date: '2024-01-15', icon: 'fas fa-flag' },
+            { id: 2, title: 'Pertandingan Voli', category: 'olahraga', date: '2024-01-12', icon: 'fas fa-volleyball' },
+            { id: 3, title: 'Festival Budaya', category: 'seni', date: '2024-01-10', icon: 'fas fa-music' },
+            { id: 4, title: 'Kelas Matematika', category: 'akademik', date: '2024-01-08', icon: 'fas fa-calculator' },
+            { id: 5, title: 'Olahraga Basket', category: 'olahraga', date: '2024-01-05', icon: 'fas fa-basketball' },
+            { id: 6, title: 'Tari Tradisional', category: 'seni', date: '2024-01-02', icon: 'fas fa-person' },
+            { id: 7, title: 'Laboratorium Sains', category: 'akademik', date: '2023-12-28', icon: 'fas fa-flask' },
+            { id: 8, title: 'Rapat Koordinasi', category: 'kegiatan', date: '2023-12-25', icon: 'fas fa-users' },
+            { id: 9, title: 'Latihan Pramuka', category: 'kegiatan', date: '2023-12-20', icon: 'fas fa-mountain' },
+            { id: 10, title: 'Lomba Catur', category: 'akademik', date: '2023-12-18', icon: 'fas fa-chess' },
+            { id: 11, title: 'Pertandingan Badminton', category: 'olahraga', date: '2023-12-15', icon: 'fas fa-badminton' },
+            { id: 12, title: 'Pameran Seni Rupa', category: 'seni', date: '2023-12-10', icon: 'fas fa-palette' },
+            { id: 13, title: 'Workshop Coding', category: 'akademik', date: '2023-12-05', icon: 'fas fa-code' },
+            { id: 14, title: 'Senam Pagi', category: 'kegiatan', date: '2023-11-30', icon: 'fas fa-person-hiking' },
+            { id: 15, title: 'Pertandingan Futsal', category: 'olahraga', date: '2023-11-25', icon: 'fas fa-futbol' }
+        ];
+
+        let currentFilter = 'semua';
+        let currentPhotoIndex = 0;
+        let filteredPhotos = [];
+
+        function renderGallery() {
+            if (currentFilter === 'semua') {
+                filteredPhotos = galleryData;
+            } else {
+                filteredPhotos = galleryData.filter(item => item.category === currentFilter);
+            }
+
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            filteredPhotos.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = 'gallery-item';
+                element.innerHTML = `
+                    <i class="${item.icon}"></i>
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus gallery-icon"></i>
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-title">${item.title}</div>
+                        <div class="gallery-date">${formatDate(item.date)}</div>
+                    </div>
+                `;
+                element.onclick = () => openLightbox(index);
+                galleryGrid.appendChild(element);
+            });
+
+            document.getElementById('totalPhotos').textContent = filteredPhotos.length;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function filterGallery(category) {
+            currentFilter = category;
+            currentPhotoIndex = 0;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderGallery();
+        }
+
+        function openLightbox(index) {
+            currentPhotoIndex = index;
+            const photo = filteredPhotos[index];
+            document.getElementById('lightboxImage').innerHTML = `<i style="font-size: 10rem;" class="${photo.icon}"></i>`;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % filteredPhotos.length;
+            const photo = filteredPhotos[currentPhotoIndex];
+            document.getElementById('lightboxImage').innerHTML = `<i style="font-size: 10rem;" class="${photo.icon}"></i>`;
+        }
+
+        function previousPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+            const photo = filteredPhotos[currentPhotoIndex];
+            document.getElementById('lightboxImage').innerHTML = `<i style="font-size: 10rem;" class="${photo.icon}"></i>`;
+        }
+
+        window.onclick = function(event) {
+            const lightbox = document.getElementById('lightbox');
+            if (event.target === lightbox) {
+                closeLightbox();
+            }
+        }
+
+        // Initial render
+        renderGallery();
+    </script>
+</body>
+</html>

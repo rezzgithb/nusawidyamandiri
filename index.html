@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Nusa Widya Mandiri - Website Resmi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- ============= NAVBAR ============= -->
+    <nav id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                SMKNWM
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="about.html">Tentang Kami</a></li>
+                <li><a href="news.html">Berita</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Hubungi Kami</a></li>
+            </ul>
+            <div class="navbar-auth">
+                <a href="login.html" class="btn-login">Masuk</a>
+                <a href="signup.html" class="btn-signup">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============= HERO SECTION ============= -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Selamat Datang di Nusa Widya Mandiri</h1>
+                <p>Membangun generasi masa depan dengan pendidikan berkualitas, inovatif, dan berakhlak mulia.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="scrollToSection('about')">Pelajari Lebih Lanjut</button>
+                    <a href="about.html" class="btn-secondary">Tentang Kami</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/hero-placeholder.jpg" alt="Sekolah Nusa Widya Mandiri">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= SLIDESHOW SECTION ============= -->
+    <section style="padding: 3rem 2rem; background: var(--light-gray);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Galeri Foto Terbaru</h2>
+                <p>Momen-momen berharga dari kegiatan sekolah kami</p>
+            </div>
+            <div class="slideshow-container">
+                <div class="slide active">
+                    <img src="slide1.jpg" alt="Slide 1">
+                    <div class="slide-caption">
+                        <h3>Upacara Bendera Senin Pagi</h3>
+                        <p>Momen upacara bendera setiap hari Senin sebagai bentuk disiplin dan nasionalisme</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="slide2.jpg" alt="Slide 2">
+                    <div class="slide-caption">
+                        <h3>Pembelajaran di Kelas</h3>
+                        <p>Proses belajar mengajar yang interaktif dan menyenangkan</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="slide3.jpg" alt="Slide 3">
+                    <div class="slide-caption">
+                        <h3>Kegiatan Ekstrakurikuler</h3>
+                        <p>Berbagai kegiatan ekstrakurikuler untuk mengembangkan bakat siswa</p>
+                    </div>
+                </div>
+
+                <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+                <a class="next" onclick="changeSlide(1)">&#10095;</a>
+            </div>
+            <div class="dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= TENTANG SEKOLAH ============= -->
+    <section id="about">
+        <div class="section-header">
+            <h2>Tentang Sekolah Kami</h2>
+            <p>Profil singkat institusi pendidikan kami</p>
+        </div>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h4 class="card-title">Kurikulum Terpadu</h4>
+                <p class="card-text">Menggunakan kurikulum nasional yang disesuaikan dengan perkembangan zaman dan kebutuhan industri.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-chalkboard-user"></i>
+                </div>
+                <h4 class="card-title">Guru Berkualitas</h4>
+                <p class="card-text">Tim pendidik profesional yang berpengalaman dan terus mengikuti perkembangan pendidikan terkini.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <h4 class="card-title">Fasilitas Modern</h4>
+                <p class="card-text">Dilengkapi dengan laboratorium, perpustakaan digital, dan ruang belajar berteknologi tinggi.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h4 class="card-title">Pembinaan Karakter</h4>
+                <p class="card-text">Fokus pada pengembangan kepribadian dan akhlak mulia siswa melalui berbagai kegiatan.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= STATISTIK ============= -->
+    <section style="background: var(--light-gray);">
+        <div class="section-header">
+            <h2>Statistik Sekolah</h2>
+            <p>Pencapaian dan perkembangan sekolah kami</p>
+        </div>
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-number" id="stat-students">100+</div>
+                <div class="stat-label">Siswa Aktif</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-teachers">17+</div>
+                <div class="stat-label">Guru Profesional</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-years">15+</div>
+                <div class="stat-label">Tahun Berdiri</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-facilities">12+</div>
+                <div class="stat-label">Fasilitas Lengkap</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= BERITA TERBARU ============= -->
+    <section id="news">
+        <div class="section-header">
+            <h2>Berita Terbaru</h2>
+            <p>Informasi terkini dari Sekolah Nusa Widya Mandiri</p>
+        </div>
+        <div class="cards-container">
+            <div class="card">
+                <img src="news1.jpg" alt="Berita 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+                <span class="badge">Terbaru</span>
+                <h4 class="card-title mt-2">Peluncuran Lab Komputer Terbaru</h4>
+                <p class="card-text">Sekolah kami telah meluncurkan laboratorium komputer terbaru dengan perangkat dan infrastruktur tercanggih...</p>
+                <a href="news.html" style="font-weight: 600; color: var(--primary-blue);">Baca Selengkapnya →</a>
+            </div>
+            <div class="card">
+                <img src="news2.jpg" alt="Berita 2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+                <span class="badge">Penghargaan</span>
+                <h4 class="card-title mt-2">Siswa Raih Medali di Olimpiade Sains</h4>
+                <p class="card-text">Prestasi gemilang diraih oleh tim siswa kami dalam kompetisi olimpiade sains tingkat nasional...</p>
+                <a href="news.html" style="font-weight: 600; color: var(--primary-blue);">Baca Selengkapnya →</a>
+            </div>
+            <div class="card">
+                <img src="news3.jpg" alt="Berita 3" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;">
+                <span class="badge">Acara</span>
+                <h4 class="card-title mt-2">Festival Budaya Sekolah 2024</h4>
+                <p class="card-text">Acara festival budaya tahunan menampilkan keberagaman budaya dan kreativitas siswa kami...</p>
+                <a href="news.html" style="font-weight: 600; color: var(--primary-blue);">Baca Selengkapnya →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= FOOTER ============= -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><i class="fas fa-graduation-cap"></i> Nusa Widya Mandiri</h3>
+                <p>Sekolah terpercaya dalam membangun generasi penerus bangsa yang cerdas, terampil, dan berakhlak mulia.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Halaman</h3>
+                <a href="#home">Beranda</a>
+                <a href="#about">Tentang</a>
+                <a href="news.html">Berita</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Hubungi Kami</a>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak</h3>
+                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@nusawidya.sch.id</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Kota</p>
+            </div>
+            <div class="footer-section">
+                <h3>Ikuti Kami</h3>
+                <div class="social-links">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sekolah Nusa Widya Mandiri. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

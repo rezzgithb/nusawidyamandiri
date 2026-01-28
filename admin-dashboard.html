@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--light-gray);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding-left: 1.5rem;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .topbar {
+            background: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dashboard-content {
+            display: none;
+        }
+
+        .dashboard-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .section-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            border: 2px solid var(--border-gray);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-gray);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table thead {
+            background: var(--light-gray);
+            border-bottom: 2px solid var(--border-gray);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .btn-edit {
+            background: var(--warning-color);
+            color: var(--white);
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-gray);
+            padding-bottom: 1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                transform: translateX(-100%);
+                transition: all 0.3s ease;
+            }
+
+            .sidebar.active {
+                width: 250px;
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toggle-menu {
+            display: none;
+            background: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .toggle-menu {
+                display: block;
+            }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-graduation-cap"></i>
+            Admin Panel
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#dashboard" class="menu-link active" onclick="showDashboard('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#about" class="menu-link" onclick="showDashboard('about')"><i class="fas fa-info-circle"></i> Edit About</a></li>
+            <li><a href="#news" class="menu-link" onclick="showDashboard('news')"><i class="fas fa-newspaper"></i> Kelola Berita</a></li>
+            <li><a href="#gallery" class="menu-link" onclick="showDashboard('gallery')"><i class="fas fa-images"></i> Kelola Gallery</a></li>
+            <li><a href="#teachers" class="menu-link" onclick="showDashboard('teachers')"><i class="fas fa-chalkboard-user"></i> Kelola Guru</a></li>
+            <li><a href="#messages" class="menu-link" onclick="showDashboard('messages')"><i class="fas fa-envelope"></i> Pesan</a></li>
+            <li><a href="#users" class="menu-link" onclick="showDashboard('users')"><i class="fas fa-users"></i> Kelola User</a></li>
+            <li><a href="#settings" class="menu-link" onclick="showDashboard('settings')"><i class="fas fa-cog"></i> Pengaturan</a></li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <button class="toggle-menu" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i> Menu
+        </button>
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-title">
+                <i class="fas fa-gauge"></i> Admin Dashboard
+            </div>
+            <div class="topbar-user">
+                <span id="adminName">admin</span>
+                <div class="user-avatar">A</div>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="dashboard-content active">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-chart-line"></i> Dashboard Utama
+            </h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value" id="statStudents">1500</div>
+                    <div class="stat-label">Total Siswa</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chalkboard-user"></i></div>
+                    <div class="stat-value" id="statTeachers">85</div>
+                    <div class="stat-label">Total Guru</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                    <div class="stat-value" id="statNews">6</div>
+                    <div class="stat-label">Total Berita</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="stat-value" id="statMessages">0</div>
+                    <div class="stat-label">Pesan Baru</div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle"></i> Informasi Sistem
+                </h3>
+                <table class="table">
+                    <tr>
+                        <td style="font-weight: 600;">Nama Sekolah</td>
+                        <td>Sekolah Nusa Widya Mandiri</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Tahun Didirikan</td>
+                        <td>2009</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Status Akreditasi</td>
+                        <td><span class="badge">A</span></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Alamat</td>
+                        <td>Jl. Pendidikan No. 123, Kota Bandung</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- EDIT ABOUT -->
+        <div id="about" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-edit"></i> Edit Konten About
+            </h2>
+            
+            <div class="section-card">
+                <h3 class="section-title">Visi & Misi</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Visi Sekolah</label>
+                        <textarea id="visionText" placeholder="Masukkan visi sekolah">Menjadi lembaga pendidikan terdepan yang menghasilkan generasi berkarakter, cerdas, dan berdaya saing global dengan fondasi nilai-nilai Islam yang kuat.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Misi Sekolah</label>
+                        <textarea id="missionText" placeholder="Masukkan misi sekolah (pisahkan dengan baris baru)">Menyelenggarakan pendidikan berkualitas tinggi dengan standar internasional
+Mengembangkan potensi siswa secara akademik dan non-akademik
+Membangun kepribadian siswa yang berakhlak mulia dan disiplin
+Menciptakan lingkungan belajar yang aman, nyaman, dan inovatif</textarea>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="saveAbout()">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+            </div>
+        </div>
+
+        <!-- KELOLA BERITA -->
+        <div id="news" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-newspaper"></i> Kelola Berita
+            </h2>
+            
+            <div class="section-card">
+                <button class="btn-primary" onclick="openNewsModal()">
+                    <i class="fas fa-plus"></i> Tambah Berita
+                </button>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsTable">
+                            <!-- News items will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- KELOLA GALLERY -->
+        <div id="gallery" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-images"></i> Kelola Gallery
+            </h2>
+            
+            <div class="section-card">
+                <button class="btn-primary" onclick="openGalleryModal()">
+                    <i class="fas fa-plus"></i> Tambah Foto
+                </button>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="galleryTable">
+                            <!-- Gallery items will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- KELOLA GURU -->
+        <div id="teachers" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-chalkboard-user"></i> Kelola Data Guru
+            </h2>
+            
+            <div class="section-card">
+                <button class="btn-primary" onclick="openTeacherModal()">
+                    <i class="fas fa-plus"></i> Tambah Guru
+                </button>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Pengalaman</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachersTable">
+                            <!-- Teachers will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESAN -->
+        <div id="messages" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-envelope"></i> Pesan dari Pengunjung
+            </h2>
+            
+            <div class="section-card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Subjek</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTable">
+                            <!-- Messages will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- KELOLA USER -->
+        <div id="users" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-users"></i> Kelola User
+            </h2>
+            
+            <div class="section-card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama Lengkap</th>
+                                <th>Email</th>
+                                <th>Tipe</th>
+                                <th>Terdaftar</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <!-- Users will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PENGATURAN -->
+        <div id="settings" class="dashboard-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-blue);">
+                <i class="fas fa-cog"></i> Pengaturan Sistem
+            </h2>
+            
+            <div class="section-card">
+                <h3 class="section-title">Informasi Kontak Sekolah</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Email Sekolah</label>
+                        <input type="email" id="schoolEmail" value="info@nusawidya.sch.id">
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Telepon</label>
+                        <input type="tel" id="schoolPhone" value="+62 812-3456-7890">
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Sekolah</label>
+                        <input type="text" id="schoolAddress" value="Jl. Pendidikan No. 123, Kota">
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" id="schoolWebsite" value="https://nusawidya.sch.id">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Simpan Pengaturan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <!-- News Modal -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah/Edit Berita</h3>
+                <button class="modal-close" onclick="closeModal('newsModal')">×</button>
+            </div>
+            <form onsubmit="saveNews(event)">
+                <div class="form-group">
+                    <label>Judul Berita</label>
+                    <input type="text" id="newsTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="newsCategory" required>
+                        <option>berita-internal</option>
+                        <option>ekstrakurikuler</option>
+                        <option>artikel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Konten</label>
+                    <textarea id="newsContent" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Simpan Berita</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Check authentication
+        window.addEventListener('load', () => {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole !== 'admin') {
+                window.location.href = 'login.html';
+            }
+            
+            const userName = localStorage.getItem('userName');
+            document.getElementById('adminName').textContent = userName || 'admin';
+            
+            loadDashboardData();
+        });
+
+        function showDashboard(section) {
+            document.querySelectorAll('.dashboard-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-link').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.getElementById(section).classList.add('active');
+            event.target.closest('.menu-link').classList.add('active');
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function loadDashboardData() {
+            // Load messages
+            const messages = JSON.parse(localStorage.getItem('contactMessages')) || [];
+            document.getElementById('statMessages').textContent = messages.length;
+            
+            const messagesTable = document.getElementById('messagesTable');
+            messagesTable.innerHTML = '';
+            messages.forEach(msg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${msg.name}</td>
+                    <td>${msg.email}</td>
+                    <td>${msg.subject}</td>
+                    <td>${new Date(msg.date).toLocaleDateString('id-ID')}</td>
+                    <td><span class="badge">${msg.status}</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="viewMessage(${messages.indexOf(msg)})">Lihat</button>
+                        <button class="btn-delete" onclick="deleteMessage(${messages.indexOf(msg)})">Hapus</button>
+                    </td>
+                `;
+                messagesTable.appendChild(row);
+            });
+            
+            // Load users
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const usersTable = document.getElementById('usersTable');
+            usersTable.innerHTML = '';
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.fullName}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${new Date(user.createdAt).toLocaleDateString('id-ID')}</td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteUser(${index})">Hapus</button>
+                    </td>
+                `;
+                usersTable.appendChild(row);
+            });
+            
+            // Load news
+            const newsData = JSON.parse(localStorage.getItem('schoolNews')) || [];
+            document.getElementById('statNews').textContent = newsData.length;
+            
+            const newsTable = document.getElementById('newsTable');
+            newsTable.innerHTML = '';
+            newsData.forEach((news, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${news.title}</td>
+                    <td>${news.category}</td>
+                    <td>${new Date(news.date).toLocaleDateString('id-ID')}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editNews(${index})">Edit</button>
+                        <button class="btn-delete" onclick="deleteNews(${index})">Hapus</button>
+                    </td>
+                `;
+                newsTable.appendChild(row);
+            });
+        }
+
+        function openNewsModal() {
+            document.getElementById('newsModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function saveNews(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('newsTitle').value;
+            const category = document.getElementById('newsCategory').value;
+            const content = document.getElementById('newsContent').value;
+            
+            const newsData = JSON.parse(localStorage.getItem('schoolNews')) || [];
+            newsData.push({
+                title,
+                category,
+                content,
+                date: new Date().toISOString(),
+                author: 'Admin'
+            });
+            
+            localStorage.setItem('schoolNews', JSON.stringify(newsData));
+            showNotification('Berita berhasil ditambahkan!', 'success');
+            closeModal('newsModal');
+            loadDashboardData();
+        }
+
+        function deleteNews(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
+                const newsData = JSON.parse(localStorage.getItem('schoolNews')) || [];
+                newsData.splice(index, 1);
+                localStorage.setItem('schoolNews', JSON.stringify(newsData));
+                showNotification('Berita berhasil dihapus!', 'success');
+                loadDashboardData();
+            }
+        }
+
+        function deleteMessage(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus pesan ini?')) {
+                const messages = JSON.parse(localStorage.getItem('contactMessages')) || [];
+                messages.splice(index, 1);
+                localStorage.setItem('contactMessages', JSON.stringify(messages));
+                showNotification('Pesan berhasil dihapus!', 'success');
+                loadDashboardData();
+            }
+        }
+
+        function deleteUser(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.splice(index, 1);
+                localStorage.setItem('users', JSON.stringify(users));
+                showNotification('User berhasil dihapus!', 'success');
+                loadDashboardData();
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                email: document.getElementById('schoolEmail').value,
+                phone: document.getElementById('schoolPhone').value,
+                address: document.getElementById('schoolAddress').value,
+                website: document.getElementById('schoolWebsite').value
+            };
+            localStorage.setItem('schoolSettings', JSON.stringify(settings));
+            showNotification('Pengaturan berhasil disimpan!', 'success');
+        }
+
+        function saveAbout() {
+            const about = {
+                vision: document.getElementById('visionText').value,
+                mission: document.getElementById('missionText').value
+            };
+            localStorage.setItem('schoolAbout', JSON.stringify(about));
+            showNotification('Konten About berhasil disimpan!', 'success');
+        }
+
+        function openGalleryModal() {
+            showNotification('Fitur upload gallery dalam pengembangan', 'info');
+        }
+
+        function openTeacherModal() {
+            showNotification('Fitur tambah guru dalam pengembangan', 'info');
+        }
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

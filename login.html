@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%);
+            padding: 2rem;
+        }
+        
+        .auth-box {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            max-width: 450px;
+            width: 100%;
+            padding: 3rem;
+            animation: scaleIn 0.6s ease-in-out;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-header p {
+            color: var(--text-light);
+        }
+        
+        .auth-box .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-auth {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        
+        .btn-auth:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-google {
+            width: 100%;
+            padding: 1rem;
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-google:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-gray);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: var(--text-light);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-gray);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-light);
+        }
+        
+        .auth-footer a {
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-section {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 2px solid var(--border-gray);
+        }
+        
+        .admin-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+        
+        .admin-creds {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .admin-creds p {
+            margin: 0.5rem 0;
+            color: var(--text-dark);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+            
+            <div class="auth-header">
+                <h1>Masuk</h1>
+                <p>Selamat datang kembali</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Masukkan email Anda">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" required placeholder="Masukkan kata sandi Anda">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        Ingat saya
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>atau</span>
+            </div>
+
+            <button class="btn-google" onclick="loginWithGoogle()">
+                <i class="fab fa-google"></i> Masuk dengan Google
+            </button>
+
+            <div class="admin-section">
+                <h3><i class="fas fa-key"></i>Hubungi Muhamad Reza Bahtiar Untuk Akses Akun Admin</h3>
+                <div class="admin-creds">
+                    <p><strong>Instagram:</strong>zarezz444</p>
+                    <p><strong>Telegram :</strong> zarezz444</p>
+                    <p><strong>Email:</strong>mhmmdrezabhtiar@gmail.com</p>
+                    <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-light);">Gunakan akun ini untuk mengakses dashboard admin</p>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Belum punya akun? <a href="signup.html">Daftar di sini</a></p>
+                <p><a href="contact.html">Lupa kata sandi?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Cek apakah akun admin
+            if (email === 'mhmmdrezabhtiar@gmail.com' && password === 'Reza505') {
+                localStorage.setItem('userRole', 'admin');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', 'admin');
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
+            // Cek di localStorage untuk user biasa
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('userRole', 'user');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', user.fullName);
+                showNotification('Login berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'user-dashboard.html';
+                }, 1500);
+            } else {
+                showNotification('Email atau kata sandi salah', 'error');
+            }
+        }
+        
+        function loginWithGoogle() {
+            showNotification('Fitur Google Login sedang diintegrasikan', 'info');
+            // Integrasi Google OAuth akan dilakukan di sini
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem;">×</button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

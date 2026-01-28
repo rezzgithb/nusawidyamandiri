@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--light-gray);
+        }
+
+        .user-dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .user-sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 2rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .user-sidebar-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-sidebar-menu {
+            list-style: none;
+        }
+
+        .user-sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .user-sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .user-sidebar-menu a:hover,
+        .user-sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding-left: 1.5rem;
+        }
+
+        .user-main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .user-topbar {
+            background: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-topbar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .btn-logout-user {
+            padding: 0.5rem 1rem;
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout-user:hover {
+            transform: translateY(-2px);
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .user-section-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .section-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-field {
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .field-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .field-value {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 1rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .activity-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .user-sidebar {
+                width: 0;
+                transform: translateX(-100%);
+                transition: all 0.3s ease;
+            }
+
+            .user-sidebar.active {
+                width: 250px;
+                transform: translateX(0);
+            }
+
+            .user-main-content {
+                margin-left: 0;
+            }
+
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-topbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .toggle-menu-user {
+                display: block;
+                background: var(--white);
+                border: none;
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+            }
+        }
+
+        .toggle-menu-user {
+            display: none;
+        }
+
+        .stats-user {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card-user {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon-user {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-value-user {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label-user {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="user-dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="user-sidebar" id="userSidebar">
+            <div class="user-sidebar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                Siswa Portal
+            </div>
+            <ul class="user-sidebar-menu">
+                <li><a href="#profile" class="user-menu-link active" onclick="showUserDashboard('profile')"><i class="fas fa-user"></i> Profil Saya</a></li>
+                <li><a href="#grades" class="user-menu-link" onclick="showUserDashboard('grades')"><i class="fas fa-star"></i> Nilai</a></li>
+                <li><a href="#schedule" class="user-menu-link" onclick="showUserDashboard('schedule')"><i class="fas fa-calendar"></i> Jadwal</a></li>
+                <li><a href="#attendance" class="user-menu-link" onclick="showUserDashboard('attendance')"><i class="fas fa-check-circle"></i> Kehadiran</a></li>
+                <li><a href="#announcements" class="user-menu-link" onclick="showUserDashboard('announcements')"><i class="fas fa-bell"></i> Pengumuman</a></li>
+                <li><a href="#assignments" class="user-menu-link" onclick="showUserDashboard('assignments')"><i class="fas fa-tasks"></i> Tugas</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="user-main-content">
+            <button class="toggle-menu-user" onclick="toggleUserSidebar()">
+                <i class="fas fa-bars"></i> Menu
+            </button>
+
+            <!-- TOPBAR -->
+            <div class="user-topbar">
+                <div class="user-topbar-title">
+                    <i class="fas fa-user-graduate"></i> Selamat Datang di Portal Siswa
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userInitial">S</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userFullName">Siswa</div>
+                        <div class="user-role">Siswa Aktif</div>
+                    </div>
+                    <button class="btn-logout-user" onclick="logoutUser()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- PROFILE SECTION -->
+            <div id="profile" class="dashboard-section active">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-user-circle"></i> Profil Saya
+                    </h2>
+                    <div class="profile-info-grid">
+                        <div class="profile-field">
+                            <div class="field-label">Nama Lengkap</div>
+                            <div class="field-value" id="profileName">-</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Email</div>
+                            <div class="field-value" id="profileEmail">-</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">NIS (Nomor Induk Siswa)</div>
+                            <div class="field-value">0123456789</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Kelas</div>
+                            <div class="field-value">XI IPA 1</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Tahun Ajaran</div>
+                            <div class="field-value">2024/2025</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Status</div>
+                            <div class="field-value">
+                                <span class="badge">Aktif</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-user">
+                    <div class="stat-card-user">
+                        <div class="stat-icon-user"><i class="fas fa-star"></i></div>
+                        <div class="stat-value-user">85</div>
+                        <div class="stat-label-user">Rata-rata Nilai</div>
+                    </div>
+                    <div class="stat-card-user">
+                        <div class="stat-icon-user"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-value-user">98%</div>
+                        <div class="stat-label-user">Kehadiran</div>
+                    </div>
+                    <div class="stat-card-user">
+                        <div class="stat-icon-user"><i class="fas fa-list-check"></i></div>
+                        <div class="stat-value-user">12</div>
+                        <div class="stat-label-user">Tugas Selesai</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRADES SECTION -->
+            <div id="grades" class="dashboard-section">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-star"></i> Nilai Saya
+                    </h2>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: var(--light-gray);">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Mata Pelajaran</th>
+                                    <th style="padding: 1rem; text-align: center; font-weight: 600;">UH 1</th>
+                                    <th style="padding: 1rem; text-align: center; font-weight: 600;">UH 2</th>
+                                    <th style="padding: 1rem; text-align: center; font-weight: 600;">PTS</th>
+                                    <th style="padding: 1rem; text-align: center; font-weight: 600;">PAS</th>
+                                    <th style="padding: 1rem; text-align: center; font-weight: 600;">Rata-rata</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Matematika</td>
+                                    <td style="padding: 1rem; text-align: center;">82</td>
+                                    <td style="padding: 1rem; text-align: center;">85</td>
+                                    <td style="padding: 1rem; text-align: center;">88</td>
+                                    <td style="padding: 1rem; text-align: center;">90</td>
+                                    <td style="padding: 1rem; text-align: center; font-weight: 700; color: var(--primary-blue);">86</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Bahasa Indonesia</td>
+                                    <td style="padding: 1rem; text-align: center;">80</td>
+                                    <td style="padding: 1rem; text-align: center;">83</td>
+                                    <td style="padding: 1rem; text-align: center;">85</td>
+                                    <td style="padding: 1rem; text-align: center;">88</td>
+                                    <td style="padding: 1rem; text-align: center; font-weight: 700; color: var(--primary-blue);">84</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Bahasa Inggris</td>
+                                    <td style="padding: 1rem; text-align: center;">78</td>
+                                    <td style="padding: 1rem; text-align: center;">81</td>
+                                    <td style="padding: 1rem; text-align: center;">84</td>
+                                    <td style="padding: 1rem; text-align: center;">87</td>
+                                    <td style="padding: 1rem; text-align: center; font-weight: 700; color: var(--primary-blue);">82</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Fisika</td>
+                                    <td style="padding: 1rem; text-align: center;">85</td>
+                                    <td style="padding: 1rem; text-align: center;">87</td>
+                                    <td style="padding: 1rem; text-align: center;">89</td>
+                                    <td style="padding: 1rem; text-align: center;">91</td>
+                                    <td style="padding: 1rem; text-align: center; font-weight: 700; color: var(--primary-blue);">88</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCHEDULE SECTION -->
+            <div id="schedule" class="dashboard-section">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-calendar"></i> Jadwal Pelajaran
+                    </h2>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: var(--light-gray);">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Hari</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Jam</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Mata Pelajaran</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Guru</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600;">Ruang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Senin</td>
+                                    <td style="padding: 1rem;">07:00 - 08:30</td>
+                                    <td style="padding: 1rem;">Matematika</td>
+                                    <td style="padding: 1rem;">Ibu Siti Rahayu, S.Pd</td>
+                                    <td style="padding: 1rem;">XI IPA 1</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Selasa</td>
+                                    <td style="padding: 1rem;">08:45 - 10:15</td>
+                                    <td style="padding: 1rem;">Bahasa Indonesia</td>
+                                    <td style="padding: 1rem;">Ibu Nur Azizah, S.Pd</td>
+                                    <td style="padding: 1rem;">XI IPA 1</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-gray);">
+                                    <td style="padding: 1rem;">Rabu</td>
+                                    <td style="padding: 1rem;">10:30 - 12:00</td>
+                                    <td style="padding: 1rem;">Fisika</td>
+                                    <td style="padding: 1rem;">Pak Darmawan, M.Sc</td>
+                                    <td style="padding: 1rem;">Lab IPA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ATTENDANCE SECTION -->
+            <div id="attendance" class="dashboard-section">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-check-circle"></i> Data Kehadiran
+                    </h2>
+                    <div class="profile-info-grid">
+                        <div class="profile-field">
+                            <div class="field-label">Total Hari Sekolah</div>
+                            <div class="field-value">200</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Hadir</div>
+                            <div class="field-value" style="color: var(--success-color);">196</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Sakit</div>
+                            <div class="field-value">2</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Izin</div>
+                            <div class="field-value">2</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Alfa</div>
+                            <div class="field-value" style="color: var(--danger-color);">0</div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="field-label">Persentase Kehadiran</div>
+                            <div class="field-value" style="color: var(--success-color);">98%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANNOUNCEMENTS SECTION -->
+            <div id="announcements" class="dashboard-section">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-bell"></i> Pengumuman
+                    </h2>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-title">Libur Semester Genap</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Libur semester genap dimulai 25 Mei 2024 hingga 15 Juli 2024.</p>
+                            <div class="activity-date">2024-05-20</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-title">Penerimaan Siswa Baru 2024</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Pendaftaran siswa baru dibuka mulai 1 Juli 2024. Informasi selengkapnya bisa lihat di website sekolah.</p>
+                            <div class="activity-date">2024-06-15</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-title">Pengumpulan Tugas Akhir</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Batas akhir pengumpulan tugas akhir semester gasal adalah 20 Mei 2024.</p>
+                            <div class="activity-date">2024-05-10</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ASSIGNMENTS SECTION -->
+            <div id="assignments" class="dashboard-section">
+                <div class="user-section-card">
+                    <h2 class="section-heading">
+                        <i class="fas fa-tasks"></i> Tugas Saya
+                    </h2>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-title">📝 Matematika - PR Bab 5</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Mengerjakan soal latihan halaman 120-125 dari buku paket.</p>
+                            <div class="activity-date">Deadline: 25 Januari 2024</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-title">✅ Bahasa Indonesia - Analisis Puisi</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem; color: var(--success-color); font-weight: 600;">Status: Selesai</p>
+                            <div class="activity-date">Dikumpulkan: 22 Januari 2024</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-title">🔬 Fisika - Laporan Praktikum</div>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Membuat laporan hasil praktikum gerak harmonis sederhana.</p>
+                            <div class="activity-date">Deadline: 28 Januari 2024</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Check authentication
+        window.addEventListener('load', () => {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole !== 'user' && userRole !== 'admin') {
+                window.location.href = 'login.html';
+            }
+            
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            document.getElementById('userFullName').textContent = userName || 'Siswa';
+            document.getElementById('profileName').textContent = userName || '-';
+            document.getElementById('profileEmail').textContent = userEmail || '-';
+            document.getElementById('userInitial').textContent = (userName ? userName[0] : 'S').toUpperCase();
+        });
+
+        function showUserDashboard(section) {
+            document.querySelectorAll('.dashboard-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.user-menu-link').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.getElementById(section).classList.add('active');
+            event.target.closest('.user-menu-link').classList.add('active');
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('userSidebar').classList.remove('active');
+            }
+        }
+
+        function toggleUserSidebar() {
+            document.getElementById('userSidebar').classList.toggle('active');
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

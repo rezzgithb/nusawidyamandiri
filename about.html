@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - Nusa Widya Mandiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-header {
+            margin-top: 100px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .about-header h1 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border-gray);
+            overflow-x: auto;
+        }
+        
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-blue);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .mission-vision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .mission-card,
+        .vision-card {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-blue);
+        }
+        
+        .mission-card h3,
+        .vision-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .structure-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+        
+        .structure-table thead {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+        
+        .structure-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .structure-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .structure-table tbody tr:hover {
+            background: var(--light-gray);
+        }
+        
+        .org-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .org-position {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1), rgba(14, 165, 233, 0.05));
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .org-position-name {
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .org-position-person {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .org-position-detail {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .teacher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .teacher-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            animation: slideUp 0.6s ease-in-out;
+        }
+        
+        .teacher-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .teacher-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+        }
+        
+        .teacher-info {
+            padding: 1.5rem;
+        }
+        
+        .teacher-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .teacher-subject {
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .teacher-desc {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .year-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: slideInLeft 0.6s ease-in-out;
+        }
+        
+        .timeline-year {
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            background: var(--light-gray);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .timeline-content {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .timeline-content h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+            
+            .teacher-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .tabs {
+                gap: 0.5rem;
+            }
+            
+            .tab-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                NWM School
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="index.html#about">Tentang</a></li>
+                <li><a href="about.html">Tentang Kami</a></li>
+                <li><a href="news.html">Berita</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Hubungi Kami</a></li>
+            </ul>
+            <div class="navbar-auth">
+                <a href="login.html" class="btn-login">Masuk</a>
+                <a href="signup.html" class="btn-signup">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="about-header">
+        <h1>Tentang Kami</h1>
+        <p>Sejarah, Visi, Misi, dan Struktur Organisasi Sekolah Nusa Widya Mandiri</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <section>
+        <div class="container">
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('sejarah')">
+                    <i class="fas fa-history"></i> Sejarah
+                </button>
+                <button class="tab-btn" onclick="showTab('visi-misi')">
+                    <i class="fas fa-target"></i> Visi & Misi
+                </button>
+                <button class="tab-btn" onclick="showTab('struktur-yayasan')">
+                    <i class="fas fa-sitemap"></i> Struktur Yayasan
+                </button>
+                <button class="tab-btn" onclick="showTab('struktur-sekolah')">
+                    <i class="fas fa-building"></i> Struktur Sekolah
+                </button>
+                <button class="tab-btn" onclick="showTab('guru')">
+                    <i class="fas fa-chalkboard-user"></i> Profil Guru
+                </button>
+            </div>
+
+            <!-- TAB: SEJARAH -->
+            <div id="sejarah" class="tab-content active">
+                <h2>Sejarah Sekolah</h2>
+                <p>Sekolah Nusa Widya Mandiri didirikan pada tahun 2009 dengan visi untuk memberikan pendidikan berkualitas dan membangun generasi yang berkarakter.</p>
+                
+                <div class="year-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2009</div>
+                        <div class="timeline-content">
+                            <h4>Pendirian Sekolah</h4>
+                            <p>Sekolah Nusa Widya Mandiri didirikan dengan fasilitas dasar dan 50 siswa angkatan pertama.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2012</div>
+                        <div class="timeline-content">
+                            <h4>Ekspansi Fasilitas</h4>
+                            <p>Pembangunan gedung baru, perpustakaan, dan laboratorium IPA untuk mendukung pembelajaran yang lebih baik.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015</div>
+                        <div class="timeline-content">
+                            <h4>Akreditasi A</h4>
+                            <p>Mendapatkan akreditasi A dari Badan Akreditasi Nasional berkat peningkatan kualitas pendidikan.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2018</div>
+                        <div class="timeline-content">
+                            <h4>Digitalisasi Pendidikan</h4>
+                            <p>Implementasi sistem pembelajaran digital dan penambahan ruang komputer berteknologi terkini.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2024</div>
+                        <div class="timeline-content">
+                            <h4>Era Modern</h4>
+                            <p>Peluncuran website sekolah dan sistem manajemen pembelajaran online untuk efisiensi pendidikan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: VISI MISI -->
+            <div id="visi-misi" class="tab-content">
+                <h2>Visi dan Misi</h2>
+                <div class="mission-vision">
+                    <div class="vision-card">
+                        <h3><i class="fas fa-eye"></i> Visi</h3>
+                        <p>"Menjadi lembaga pendidikan terdepan yang menghasilkan generasi berkarakter, cerdas, dan berdaya saing global dengan fondasi nilai-nilai Islam yang kuat."</p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <h3><i class="fas fa-bullseye"></i> Misi</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 1rem; padding-left: 2rem; position: relative;">
+                                <span style="position: absolute; left: 0;">✓</span>
+                                Menyelenggarakan pendidikan berkualitas tinggi dengan standar internasional
+                            </li>
+                            <li style="margin-bottom: 1rem; padding-left: 2rem; position: relative;">
+                                <span style="position: absolute; left: 0;">✓</span>
+                                Mengembangkan potensi siswa secara akademik dan non-akademik
+                            </li>
+                            <li style="margin-bottom: 1rem; padding-left: 2rem; position: relative;">
+                                <span style="position: absolute; left: 0;">✓</span>
+                                Membangun kepribadian siswa yang berakhlak mulia dan disiplin
+                            </li>
+                            <li style="padding-left: 2rem; position: relative;">
+                                <span style="position: absolute; left: 0;">✓</span>
+                                Menciptakan lingkungan belajar yang aman, nyaman, dan inovatif
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: STRUKTUR YAYASAN -->
+            <div id="struktur-yayasan" class="tab-content">
+                <h2>Struktur Organisasi Yayasan</h2>
+                <table class="structure-table">
+                    <thead>
+                        <tr>
+                            <th>Posisi</th>
+                            <th>Nama Lengkap</th>
+                            <th>No. Kontak</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ketua Yayasan</td>
+                            <td>Ir. H. Supriyanto, MM</td>
+                            <td>+62 812-xxxx-xxxx</td>
+                            <td>ketua@nusawidya.sch.id</td>
+                        </tr>
+                        <tr>
+                            <td>Wakil Ketua</td>
+                            <td>Drs. Bambang Sutrisno, M.Pd</td>
+                            <td>+62 812-xxxx-xxxx</td>
+                            <td>wakil@nusawidya.sch.id</td>
+                        </tr>
+                        <tr>
+                            <td>Sekretaris</td>
+                            <td>Hj. Siti Nurhaliza, S.E</td>
+                            <td>+62 812-xxxx-xxxx</td>
+                            <td>sekretaris@nusawidya.sch.id</td>
+                        </tr>
+                        <tr>
+                            <td>Bendahara</td>
+                            <td>Dr. M. Rizki Pratama, S.Akt</td>
+                            <td>+62 812-xxxx-xxxx</td>
+                            <td>bendahara@nusawidya.sch.id</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TAB: STRUKTUR SEKOLAH -->
+            <div id="struktur-sekolah" class="tab-content">
+                <h2>Struktur Organisasi Sekolah</h2>
+                <table class="structure-table">
+                    <thead>
+                        <tr>
+                            <th>Posisi</th>
+                            <th>Nama Lengkap</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kepala Sekolah</td>
+                            <td>Drs. Eko Prasetyo, M.Pd</td>
+                            <td><span class="badge">Aktif</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wakil Kepala Sekolah - Kurikulum</td>
+                            <td>Hj. Dewi Lestari, S.Pd, M.Pd</td>
+                            <td><span class="badge">Aktif</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wakil Kepala Sekolah - Kesiswaan</td>
+                            <td>Budi Santoso, S.Pd</td>
+                            <td><span class="badge">Aktif</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wakil Kepala Sekolah - Sarana Prasarana</td>
+                            <td>Hery Gunawan, S.T</td>
+                            <td><span class="badge">Aktif</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kepala Administrasi</td>
+                            <td>Tri Wahyuni, S.E</td>
+                            <td><span class="badge">Aktif</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TAB: PROFIL GURU -->
+            <div id="guru" class="tab-content">
+                <h2>Profil Guru dan Tenaga Pendidik</h2>
+                <p style="margin-bottom: 2rem;">Kami memiliki tim pendidik profesional dengan pengalaman lebih dari 10 tahun di bidangnya masing-masing.</p>
+                
+                <div class="teacher-grid">
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Ibu Nur Azizah, S.Pd</div>
+                            <div class="teacher-subject">Bahasa Indonesia</div>
+                            <div class="teacher-desc">Pengalaman 12 tahun mengajar Bahasa Indonesia. Penyayang siswa dan metodologi pembelajaran kreatif.</div>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Pak Darmawan, M.Sc</div>
+                            <div class="teacher-subject">Fisika</div>
+                            <div class="teacher-desc">Master di Universitas Indonesia. Ahli dalam pengajaran fisika modern dan eksperimen interaktif.</div>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Ibu Siti Rahayu, S.Pd</div>
+                            <div class="teacher-subject">Matematika</div>
+                            <div class="teacher-desc">Berpengalaman 10 tahun. Spesialis dalam membuat siswa mahir dan menyukai matematika.</div>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Pak Ahmad Zain, S.E</div>
+                            <div class="teacher-subject">Ekonomi</div>
+                            <div class="teacher-desc">Lulusan Universitas Diponegoro. Berpengalaman di dunia bisnis dan pendidikan ekonomi.</div>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Ibu Eka Purwati, M.A</div>
+                            <div class="teacher-subject">Bahasa Inggris</div>
+                            <div class="teacher-desc">Master dari luar negeri. Ahli dalam komunikasi bahasa Inggris internasional.</div>
+                        </div>
+                    </div>
+
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-name">Pak Rudi Hartono, S.Pd</div>
+                            <div class="teacher-subject">Olahraga</div>
+                            <div class="teacher-desc">Pelatih olahraga berprestasi. Membina siswa untuk kompetisi tingkat provinsi dan nasional.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><i class="fas fa-graduation-cap"></i> Nusa Widya Mandiri</h3>
+                <p>Sekolah terpercaya dalam membangun generasi penerus bangsa yang cerdas, terampil, dan berakhlak mulia.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Halaman</h3>
+                <a href="index.html">Beranda</a>
+                <a href="about.html">Tentang Kami</a>
+                <a href="news.html">Berita</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Hubungi Kami</a>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak</h3>
+                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@nusawidya.sch.id</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Kota</p>
+            </div>
+            <div class="footer-section">
+                <h3>Ikuti Kami</h3>
+                <div class="social-links">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sekolah Nusa Widya Mandiri. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
